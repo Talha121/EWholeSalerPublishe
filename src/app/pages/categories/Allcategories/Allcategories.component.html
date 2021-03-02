@@ -1,0 +1,162 @@
+
+
+    <div class="row">
+      <div class="col-sm-12">
+<!-- Hover table card start -->
+<app-card [title]="'categories'" [classHeader]="true" [blockClass]="'table-border-style'">
+  <span class="code-header">All Categories Detail</span>
+
+  <div class="row" *ngIf="!showform">
+    <div class="col-sm-10" >
+     <button class="btn btn-success pull-right" (click)="showinput()"> Add Category</button>
+    </div>
+    
+  </div>
+  <div class="row" *ngIf="showform">
+    <div class="col-sm-1">
+
+    </div>
+    <div class="col-sm-11">
+      <div class="row">
+        <form [formGroup]="CategoryForm">
+          <div class="col-sm-12">
+         <label for="validationCustom01">Category Name(English)</label> 
+            <input type="text" placeholder="category Name(English)"  formControlName="category_Name"  class="form-control" >
+      </div>
+      <br>
+      <div class="col-sm-12">
+     
+       <label for="validationCustom01">Category Name(Urdu)</label> 
+        <input type="text" placeholder="category Name(Urdu)" formControlName="category_Name_Urdu"   class="form-control">
+     </div>
+     <br>
+     <div class="col-sm-12">
+     <button class="btn btn-info" (click)="AddCategory()" type="submit">Save</button>
+     </div>
+    </form>
+        
+      </div>
+
+    </div>
+   
+  </div>
+  <div class="table-responsive"style="padding: 2%;">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th (click)="Sort('id')">#<i class="fa fa-sort"></i></th>
+        <th (click)="Sort('category_Name')">Category Name<i class="fa fa-sort"></i></th>
+        <th (click)="Sort('category_Name_Urdu')">Catehory Name(Urdu)<i class="fa fa-sort"></i></th>
+        <th (click)="Sort('category_Image')">Image<i class="fa fa-sort"></i></th>
+        <th (click)="Sort('description')">Actions<i class="fa fa-sort"></i></th>
+        <!-- <th>Image</th> -->
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let obj of CategoriesList |orderBy:key :reverse | paginate:{itemsPerPage:10,currentPage:p}; let i=index;" >
+        <td style="width: 2px;">{{i+1}}</td>
+        <td>{{obj.category_Name}}</td>
+        <td>{{obj.category_Name_Urdu}}</td>
+        <td *ngIf="obj.category_Image!=noimage; else nImage"><img [src]="ImagebaseUrl+obj.category_Image" style="height: 40px;"/></td>
+        <ng-template #nImage>
+          <td >No Image</td>
+        </ng-template>
+       <td>  <div class="row">
+
+        <div style="padding: 4px;">
+          <i class="fa fa-upload" aria-hidden="true" style="font-size:18px;color:rgb(255, 0, 0)" title="Upload Image"  (click)="openLg(uploadfilecontent,obj.category_Id)"></i> 
+        </div>
+        <div style="padding: 4px;">
+          <i class="fa fa-edit" style="font-size:18px;color:rgb(0, 195, 255)"(click)="UpdateView(Update,obj.category_Id)"></i>
+        </div>
+    </div></td>
+      </tr>
+     
+      </tbody>
+    
+    </table>
+    <div class="row">
+      <div style="right: 10%;">
+        <pagination-controls (pageChange)="p=$event"></pagination-controls>
+    </div>
+  </div>
+  </div>
+</app-card>
+<!-- Hover table card end -->
+      </div>
+    </div>
+  
+    <ng-template #uploadfilecontent let-modal>
+      
+      <div class="modal-header">
+        <h4 class="modal-title">Upload file</h4>
+      
+      </div>
+      <div class="modal-body">
+           
+        <div class="container">
+          <form  [formGroup]="form" (ngSubmit)="SubmitImage()">
+      
+            <!-- Progress Bar -->
+            <div class="progress form-group" *ngIf="progress > 0">
+                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" [style.width.%]="progress">
+                </div>
+            </div>
+    
+            <div class="form-group">
+                <input type="file" (change)="uploadFile($event)" required>
+            </div>
+    
+          
+    
+            <div class="form-group">
+                <button class="btn btn-danger btn-block btn-lg" [disabled]="form.get('avatar')==null">Upload</button>
+            </div>
+        </form>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+      </div>
+    </ng-template>
+
+    <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">  
+      <p style="color: white">Please Wait. </p>  
+      </ngx-spinner> 
+  
+      <ng-template #Update let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title">Update  Category</h4>
+        
+        </div>
+        <div class="modal-body">
+          <form class="needs-validation" novalidate [formGroup]="CategoryForm">
+            <div class="form-row">
+              <div class="col-md-5 mb-3">
+                <label for="validationCustom01">Category Name(English)</label>
+                <input type="text" class="form-control" id="validationCustom01" placeholder="Category Name(English)" formControlName="category_Name"  required>
+                
+              </div>
+              <div class="col-md-5 mb-3">
+                <label for="validationCustom01">Category Name(Urdu)</label>
+                <input type="text" class="form-control" id="validationCustom01" placeholder="Category Name(Urdu)" formControlName="category_Name_Urdu"  required>
+                
+              </div>
+             
+            </div>
+
+            
+           
+             
+          
+      
+            <button style="float: right;" class="btn btn-primary"(click)="UpdateCategory()" type="submit">Submit</button>
+          </form>
+      
+      
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+        </div>
+      </ng-template>
