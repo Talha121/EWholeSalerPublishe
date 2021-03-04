@@ -15,6 +15,11 @@ AddInventory(form:any){
   return this.http.post<any>(this.baseUrl+'AddInventory',form)
 
 };
+UpdateInventory(form:any){
+  debugger
+  return this.http.post<any>(this.baseUrl+'UpdateInventory',form)
+
+};
 ChangeStatus(id:any){
   return this.http.post<any>(this.baseUrl+'Changestatus',id)
 };

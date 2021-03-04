@@ -106,7 +106,7 @@
         <th (click)="Sort('productInventory_UnitPrice')">Unit Price(Purchase)<i class="fa fa-sort"></i></th>
         <th (click)="Sort('productInventory_SellingPrice')">Selling Price<i class="fa fa-sort"></i></th>
         <th (click)="Sort('product_TotalPrice')">Total Price<i class="fa fa-sort"></i></th>
-        <th (click)="Sort('productInventory_Status')">Status<i class="fa fa-sort"></i></th>
+        <th (click)="Sort('productInventory_Status')">Action<i class="fa fa-sort"></i></th>
         <th >Action</th>
         <!-- <th>Image</th> -->
       </tr>
@@ -132,8 +132,13 @@
           <td><img style="height: 20px;" src="assets/icon/cancel.png"/></td>
         </ng-template>
 
-          <td *ngIf="products.productInventory_Status;else deact "><button (click)="changestatus(products.productInvertory_Id)" class="btn btn-danger">Deactive</button> </td>
+          <td *ngIf="products.productInventory_Status;else deact "><button (click)="changestatus(products.productInvertory_Id)" class="btn btn-danger">Deactive</button>
+            <div style="padding: 4px;">
+              <i class="btn btn-success" style="color:white"(click)="openLgEdit(Updateinventroy,products.productInvertory_Id)">Update</i>
+            </div>
+          </td>
           <ng-template #deact>
+          
             <td><button (click)="changestatus(products.productInvertory_Id)" class="btn btn-success">Active</button></td>
           </ng-template>
         </tr>
@@ -150,6 +155,58 @@
 <!-- Hover table card end -->
       </div>
     </div>
+    <ng-template #Updateinventroy let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title">Update inventory </h4>
+      
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="inventoryform1">
+          <div class="row">
+            <div class="col-sm-4">
+              <label>Barcode</label>
+              <input type="text" class="form-control" placeholder="Scan Or search Barcode" disabled  formControlName="Barcode">
+             </div>
+           
+         
+          
+        </div>
+        <div class="row">
+       
+         <div class="col-sm-4">
+          <label>Qty </label>
+          <input type="number" class="form-control" placeholder="Description"  formControlName="ProductInventory_Qty" required>
+         </div>
+         <div class="col-sm-4">
+          <label>puchase Price </label>
+          <input type="number" class="form-control" placeholder="Description"  formControlName="singleunitpurchaseprice" required>
+         </div>
+         <div class="col-sm-4">
+          <label>sale price (Urdu)</label>
+          <input type="number" class="form-control" placeholder="Description (Urdu)"  formControlName="psingleunit_SellingPrice" required>
+         </div>
+         
+         </div>
+         <div class="col-sm-8">
+          <br>
+         
+    
+   
+          
+      </div>
+    
+    
+    
+    </form>
+    
+   
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+        <button type="button" class="btn btn-info" (click)="UpdateInventory()">Update</button>
+      </div>
+    </ng-template>
     <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">  
       <p style="color: white">Please Wait. </p>  
       </ngx-spinner> 

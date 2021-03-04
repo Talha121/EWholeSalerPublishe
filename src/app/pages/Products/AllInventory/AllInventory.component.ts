@@ -4,6 +4,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertifyService } from '../../../../../src/app/_service/alertify.service';
 import { InventoryDto } from '../../../../../src/app/Models/inventoryDto';
 import { StockinService } from './../../../../../src/app/_service/stockin.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-AllInventory',
@@ -19,7 +20,8 @@ export class AllInventoryComponent implements OnInit {
   Barcode:any;
   status :boolean;
   showform:boolean=false;
-  constructor(private alertify: AlertifyService,private SpinnerService: NgxSpinnerService,private  inventorymodal:InventoryDto,private service:StockinService,private fb:FormBuilder) { }
+  sinleinventroyda:any;
+  constructor(private modalService: NgbModal,private alertify: AlertifyService,private SpinnerService: NgxSpinnerService,private  inventorymodal:InventoryDto,private service:StockinService,private fb:FormBuilder) { }
 
   ngOnInit() {
     this.GetInventory();
@@ -47,11 +49,36 @@ export class AllInventoryComponent implements OnInit {
     psingleunit_SellingPrice: new FormControl(this.inventorymodal.psingleunit_SellingPrice),
     ProductInventory_Qty: new FormControl(0),
    });
+   inventoryform1:FormGroup=new FormGroup({
+    Barcode: new FormControl(this.inventorymodal.Barcode),
+    productInvertory_Id:new FormControl(0),
+    singleunitpurchaseprice: new FormControl(this.inventorymodal.singleunitpurchaseprice),
+    psingleunit_SellingPrice: new FormControl(this.inventorymodal.psingleunit_SellingPrice),
+    ProductInventory_Qty: new FormControl(0),
+   });
    checkform()
   {
     
     this.showform=true;
   }
+  openLgEdit(Updateinventroy,id:number){
+
+    
+debugger
+
+var data=this.Searchinvertorylist.find(res=>res.productInvertory_Id==id);
+this.sinleinventroyda=data;
+this.inventoryform1.setValue({
+  Barcode:this.sinleinventroyda.barcode,
+  productInvertory_Id:this.sinleinventroyda.productInvertory_Id,
+  singleunitpurchaseprice:this.sinleinventroyda.productInventory_UnitPrice,
+  psingleunit_SellingPrice:this.sinleinventroyda.productInventory_SellingPrice,
+  ProductInventory_Qty:this.sinleinventroyda.purchasedQty,
+
+});
+this.modalService.open(Updateinventroy, { size: 'lg' });
+  };
+
   SearchProduct(){
     if(this.Barcode==""){
       this.Searchinvertorylist=[];
@@ -83,6 +110,26 @@ export class AllInventoryComponent implements OnInit {
            this.GetInventory();
            this.showform=false;
           this.alertify.success('Inventory Add seccussfully');
+         
+        }, error => {
+         this.alertify.error('Barcode not exists');
+          console.log(error);
+        });
+  }
+  UpdateInventory()
+  {
+    debugger;
+    console.log(this.inventoryform1.value);
+
+        this.service.UpdateInventory(this.inventoryform1.value).subscribe(next => {
+       
+      
+          this.inventoryform1.reset();
+           this.GetInventory();
+           this.showform=false;
+           this.modalService.dismissAll();
+           
+          this.alertify.success('Inventory Updated seccussfully');
          
         }, error => {
          this.alertify.error('Barcode not exists');
